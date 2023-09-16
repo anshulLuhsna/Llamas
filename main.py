@@ -9,24 +9,25 @@ load_dotenv()
 
 import requests
 
-url = "https://api.worqhat.com/api/ai/content/v2"
 
-headers = {
-    "x-api-key": "sk-6cecd17a7f3f4462ac134596eab033e5",
-    "Authorization": "Bearer sk-6cecd17a7f3f4462ac134596eab033e5",
-    "Content-Type": "application/json"
-}
-
-data = {
-    "question": "Hello who are you",
-    "randomness": 0.4
-}
 
 
 
 
 #Function to return the response
 def load_answer(question):
+    url = "https://api.worqhat.com/api/ai/content/v2"
+
+    headers = {
+        "x-api-key": "sk-6cecd17a7f3f4462ac134596eab033e5",
+        "Authorization": "Bearer sk-6cecd17a7f3f4462ac134596eab033e5",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "question": question,
+        "randomness": 0.4
+    }
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 200:
