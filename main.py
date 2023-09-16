@@ -11,28 +11,28 @@ import requests
 
 
 
+url = "https://api.worqhat.com/api/ai/content/v2"
+
+headers = {
+        "x-api-key": "sk-6cecd17a7f3f4462ac134596eab033e5",
+        "Authorization": "Bearer sk-6cecd17a7f3f4462ac134596eab033e5",
+        "Content-Type": "application/json"
+    }
 
 
 
 #Function to return the response
-# def load_answer(question):
-#     url = "https://api.worqhat.com/api/ai/content/v2"
+def load_answer(question):
+    
+    data = {
+        "question": question,
+        "randomness": 0.4
+    }
+    response = requests.post(url, headers=headers, json=data)
 
-#     headers = {
-#         "x-api-key": "sk-6cecd17a7f3f4462ac134596eab033e5",
-#         "Authorization": "Bearer sk-6cecd17a7f3f4462ac134596eab033e5",
-#         "Content-Type": "application/json"
-#     }
-
-#     data = {
-#         "question": question,
-#         "randomness": 0.4
-#     }
-#     response = requests.post(url, headers=headers, json=data)
-
-#     if response.status_code == 200:
-#         resp=response.json()
-#         return resp["content"]
+    if response.status_code == 200:
+        resp=response.json()
+        return resp["content"]
    
 
 
@@ -47,7 +47,7 @@ def get_text():
 
 
 user_input=get_text()
-# response = load_answer(user_input)
+response = load_answer(user_input)
 
 submit = st.button('Generate')  
 
@@ -56,4 +56,4 @@ if submit:
 
     st.subheader("Answer:")
 
-    st.write("HI")
+    st.write(response)
