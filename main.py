@@ -26,6 +26,7 @@ def load_answer(question):
     
     data = {
         "question": question,
+        "training-data": "India is a big country in south asia",
         "randomness": 0.4
     }
     response = requests.post(url, headers=headers, json=data)
