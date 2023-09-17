@@ -1,7 +1,3 @@
-
-
-
-
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
@@ -14,6 +10,7 @@ from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
 from transformers import BartForConditionalGeneration, BartTokenizer
+import speech_recognition as sr
 #import random
 
 
@@ -116,6 +113,13 @@ def main():
         st.session_state.chat_history = None
     st.header("Study Buddy :books:")
     user_question = st.text_input("Ask a question")
+
+    st.write("Ask a question using voice:")
+    if st.button("Start Voice Input"):
+        user_voice_question = get_voice_input()
+        if user_voice_question:
+            handle_userinput(user_voice_question)
+
     if user_question:
         handle_userinput(user_question)
 
@@ -186,14 +190,27 @@ def main():
 
 
     st.session_state.conversation
+
+def get_voice_input():
+    recognizer = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        st.write("Listening...")
+        audio = recognizer.listen(source)
+
+    st.write("Processing voice input...")
+    try:
+        user_voice_question = recognizer.recognize_google(audio)
+        st.write("You said:", user_voice_question)
+        return user_voice_question
+    except sr.UnknownValueError:
+        st.write("Could not understand audio.")
+        return None
+    except sr.RequestError as e:
+        st.write("Could not request results; {0}".format(e))
+        return None
    
 
 if __name__ == '__main__':
     main()
 
-
-
-
-    
-
-    
