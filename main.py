@@ -1,5 +1,7 @@
 
 
+
+
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
@@ -8,7 +10,7 @@ from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationalRetrievalChain
+from langchain.chains import ConversationalRetrievalChain   
 from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
 from transformers import BartForConditionalGeneration, BartTokenizer
@@ -30,8 +32,11 @@ def generate_questions(summary):
     model_name = "sshleifer/distilbart-cnn-12-6"
     tokenizer = BartTokenizer.from_pretrained(model_name)
     model = BartForConditionalGeneration.from_pretrained(model_name)
-    question = model(f"Generate a question on the following summary and only return that question: {summary}")
-    return question
+    text = "Ask a question on the following summary: "+summary
+    inputs = tokenizer([text], max_length=1024, return_tensors="pt", truncation=True)
+    question = model.generate(inputs.input_ids, max_length=150, num_beams=4, length_penalty=2.0, early_stopping=True)
+    output = tokenizer.decode(question[0], skip_special_tokens=True)
+    return output
 
 def generate_summary(text):
     model_name = "sshleifer/distilbart-cnn-12-6"
@@ -176,8 +181,7 @@ def main():
         st.write("Great! Let's ask some questions about the summary.")
         # Ask questions based on the summary
         summary_questions = generate_questions(st.session_state.summary)
-        for question in summary_questions:
-            user_answer = st.text_input(question)
+        st.write(summary_questions)
             # Process the user's answers or save them as needed
 
 
