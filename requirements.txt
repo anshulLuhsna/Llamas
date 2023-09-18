@@ -6,3 +6,4 @@ ipykernel
 langchain
 python-box
 python-dotenv
+PyPDF2
